@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8?>
+<LinearLayoout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:padding="24dp"
+  android:gravity="center"
+  android:background="#F5F6FA"
+
+  <TextView
+    android:id="@+id/tvQuestion"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Question statement will appear here..."
+    android:textSize="20sp"
+    android:textStyle="bold"
+    android:textColor="#2C3E50"
+    android:gravity="center"
+    android:layout_marginBottom="32dp/>
+
+  <Button
+    android:id="@+id/btnHack"
+    android:layout_width="match_parent"
+    android:layout_heighgt="wrap-content"
+    android:text="Hack (True)"
+    android:textSize="16sp"
+    android:layout_marginBottom="16dp"
+    android:backgroundTint="#27AE60"/>
+
+  <Button
+    android:id="@+id/btnMyth"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Myth (False)"
+    android:textSize="16sp"
+    android:layout_marginBottom="24dp"
+    android:backgroundTint="#C0392B"/>
+
+  <TextView
+    android:id="@+id/tvFeedback"
+    android:layouot_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Feedback message"
+    android:textSize="16sp"
+    android:gravity="center"
+    android:visibility="gone"
+    android:layout_marginBottom="24dp"/>
+
+  <Button
+    android:id="@+id/btnNext"
+    android:layout_width="match_parent"
+    android:layout_height="wrapcontent"
+    androoid:text="Next Question"
+    android:visibility="gone"/>
+
+<LinearLayout>
+  
+    
