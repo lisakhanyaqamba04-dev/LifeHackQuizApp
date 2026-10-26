@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  android:gravity="center"
+  android:padding="24dp"
+  android:backgreound="#F5F6FA">
+
+  <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    androoid:text="Quiz Complete!"
+    android:textSize="28sp"
+    android:textStyle="bold"
+    android:textColor="#2C3E50"
+    android:layout_marginBottom="16dp"/>
+
+  <TextView
+    android:id="@+id/tvFinalScore"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Your Score: 0 / 4"
+    android:textSize="22sp"
+    android:textColor="#16A085"
+    android:layout_marginBottom="24dp"/>
+
+  <TextView
+    android:id="@+id/tvPersonalisedFeedback"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Personalised feedback goes here"
+    android:textSize="16sp"
+    android:gravitity="center"
+    android:textColor="#7F8C8D"
+    android:layout_marginBottom="32dp"/>
+
+  <Button
+    android:id="@+id/btnReview"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Review &amp; Finish"/>
+
+</LinearLayout>
+
+
+    
