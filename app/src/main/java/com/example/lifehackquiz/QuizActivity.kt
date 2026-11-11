@@ -3,85 +3,99 @@ package com.example.lifehackquiz
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class QuizActivity : AppCompatActivity() {
-  private val TAG = "QuizActivityDebug"
+    private val TAG = "QuizActivity"
 
-  private val flashcards = listOf(
-    Flashcard("Putting a wet paper towel around a beverage bottle cools it down faster in the freezer.", true, "True! Evaporative cooling accelerates heat loss."),
-    Flashcard("Putting your phone in rice will instantly fix all liquid damage safely.", false, "False! Rice dust can clog ports, and proper drying works much better."),
-    Flashcard("Microwaving a sponge for 1-2 minutes can sanitize it.", true, "True! High moisture microwave heat kills most bacteria safely if the sponge is wet."),
-    Flashcard("Opening your windows fully during extreme heat keeps the house cooler than closing blinds.", false, "False! Blocking direct sunlight keeps ambient heat out during peak sunshine hours.")
-  )
+    // List of questions (Mix of Hacks and Myths)
+    private val questions = listOf(
+        Question("Putting a wet phone in rice will fix it.", false, "Myth. Rice can introduce dust and starch into the ports. It's better to power it off and let it air dry."),
+        Question("You can cool a drink faster by wrapping it in a wet paper towel and putting it in the freezer.", true, "Hack. Evaporating water pulls heat away from the bottle much faster."),
+        Question("Placing a wooden spoon across a boiling pot stops it from boiling over.", true, "Hack. The wooden spoon pops the surface tension bubbles."),
+        Question("If you get a bee sting, put vinegar on it to neutralize the venom.", false, "Myth. Bee venom is acidic; vinegar is also acidic. Use baking soda (base) instead.")
+    )
 
-  private var currentIndex = 0
-  private var score = 0
+    private var currentQuestionIndex = 0
+    private var score = 0
+    private lateinit var tvQuestion: TextView
+    private lateinit var btnHack: Button
+    private lateinit var btnMyth: Button
+    private lateinit var btnNext: Button
 
-  private lateinit var tvQuestion: TextView
-  private lateinit var tvFeedback: TextView
-  private lateinit var btnHack: Button
-  private lateinit var btnMyth: Button
-  private lateinit var btnNext: Button
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_quiz)
+        Log.d(TAG, "Quiz screen created")
 
-  override fun onCrfeate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_quiz)
+        tvQuestion = findViewById(R.id.tvQuestion)
+        btnHack = findViewById(R.id.btnHack)
+        btnMyth = findViewById(R.id.btnMyth)
+        btnNext = findViewById(R.id.btnNext)
 
-    Log.d(TAG, "QuizActivity launched. Total questions: ${flashcards.size}")
+        // Initially hide Next button until an answer is selected
+        btnNext.isEnabled = false
 
-    tvQuestion = findViewById(R.id.tvQuestion)
-    tvFeedback = findViewById(R.id.tvFeedback)
-    btnHack = findViewById(R.id.btnHack)
-    btnMyth = findViewById(R.id.btnMyth)
-    btnNext = findViewById(R.id.btnNext)
+        loadQuestion()
 
-    loadQuestion()
-
-    btnHack.setOnClickListener { checkAnswer(true) }
-    btnMyth.setOnClickListener { checkAnswer(false) }
-
-    btnNext.setOnClickListener {
-      currentIndex++
-      if (currentIndex < flashcards.size) {
-          loadQuestion()
-      } else {
-        Log.i(TAG, "Quiz finished. Navigating to Score Screen with score: $score")
-        val intent = Intent(this, ScoreActivity::class.java).apply {
-            putExtra("USER_SCORE", score)
-            putExtra("TOTAL_QUESTIONS", flashcards.size)
+        btnHack.setOnClickListener {
+            checkAnswer(userChoice = true)
         }
-        startActivity(intent)
-        finish()
-      }
+
+        btnMyth.setOnClickListener {
+            checkAnswer(userChoice = false)
+        }
+
+        btnNext.setOnClickListener {
+            Log.d(TAG, "Next button clicked")
+            currentQuestionIndex++
+            if (currentQuestionIndex < questions.size) {
+                loadQuestion()
+            } else {
+                navigateToScore()
+            }
+        }
     }
 
-    vate fun loadQuestion() {
-      val currentCard = flashcards[currentIndex]
-      tvQuestion.text = currentCard.statement
-      tvFeedback.visibility = View.GONE
-      btnNext.visibility = View.GONE
+    private fun loadQuestion() {
+        val currentQuestion = questions[currentQuestionIndex]
+        tvQuestion.text = currentQuestion.statement
 
-      btnHack.isEnabled = true
-      btnMyth.isEnabled = true
+        // Reset buttons for new question
+        btnHack.isEnabled = true
+        btnMyth.isEnabled = true
+        btnNext.isEnabled = false
+        Log.d(TAG, "Loaded question: ${currentQuestion.statement}")
     }
 
     private fun checkAnswer(userChoice: Boolean) {
-      val currentCard = flashcards[currentIndex]
-      val isCorrect = userChoice == currentCard.isHack
+        val currentQuestion = questions[currentQuestionIndex]
 
-      if (isCorrect) {
-        score++
-        tvFeedback.text = "Correct! ${currentCard.explanation}"
-      } else {
-        tvFeedback.text = "Wrong! ${currentCard.explanation}"
-      }
+        // Disable answer buttons after selection
+        btnHack.isEnabled = false
+        btnMyth.isEnabled = false
+        btnNext.isEnabled = true
 
-      tvFeedback.visibility = View.VISIBLE
-      btnNext.visibility = View.VISIBLE
-      btnHack.isEnabled = false
-      btnMyth.isEnabled = false
+        if (userChoice == currentQuestion.isHack) {
+            score++
+            Toast.makeText(this, "Correct! That's a real time-saver!", Toast.LENGTH_SHORT).show()
+            Log.i(TAG, "User answered correctly. Current Score: $score")
+        } else {
+            Toast.makeText(this, "Wrong! That's just an urban myth.", Toast.LENGTH_SHORT).show()
+            Log.i(TAG, "User answered incorrectly.")
+        }
     }
+
+    private fun navigateToScore() {
+        Log.i(TAG, "Quiz finished. Final score: $score")
+        val intent = Intent(this, ScoreActivity::class.java)
+        // Pass the score and total questions to the next activity
+        intent.putExtra("FINAL_SCORE", score)
+        intent.putExtra("TOTAL_QUESTIONS", questions.size)
+        startActivity(intent)
+        finish() // Close quiz activity so back button doesn't return to it
+    }
+}
